@@ -8,7 +8,7 @@ import (
 
 
 const (
-	mqurl ="amqp://test1:test1@172.16.10.212:5672"
+	mqurl =""
 )
 
 
