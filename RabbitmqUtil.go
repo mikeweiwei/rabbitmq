@@ -8,7 +8,8 @@ import (
 
 
 const (
-	mqurl ="amqp://test1:test1@172.16.10.212:5672"
+	//mqurl ="amqp://test1:test1@172.16.10.212:5672"
+	mqurl ="amqp://user01:123@172.16.18.6:5672"
 )
 
 
@@ -44,9 +45,9 @@ func Push(exchange string,queueName string,message string) bool{
 		Body:        []byte(message),
 	})
 	if e != nil {
-		return true
-	}else{
 		return false
+	}else{
+		return true
 	}
 }
 
@@ -56,11 +57,26 @@ func Receive(queueName string) (<-chan amqp.Delivery, error) {
 	if channel == nil {
 		mqConnect()
 	}
-
-	msgs, err := channel.Consume(queueName, "", true, false, false, false, nil)
+	msgs, err := channel.Consume(queueName, "", true, false, false, true, nil)
 
 	failOnErr(err, "")
 
 	return msgs,err
+
+}
+//poll方式获取消息
+func POll(queueName string) (string, error) {
+
+	if channel == nil {
+		mqConnect()
+	}
+
+	delivery, _, err := channel.Get(queueName, true)
+
+	mes := string(delivery.Body[:])
+
+	failOnErr(err, "")
+
+	return mes,err
 
 }
